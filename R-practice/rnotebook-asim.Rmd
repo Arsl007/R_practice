@@ -1,0 +1,767 @@
+---
+title: "R Notebook-practice exercises"
+author: "Muhammad Asim Nawaz"
+date: "5/march/2022"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+## Start of the R practice
+```{R}
+x = 2+3 
+#function
+x 
+#letter
+'x' 
+#string 
+#if x is inverted commas then its string}
+
+```
+## Basic variable understanding
+```{R}
+# use variable name file data set
+x <- 2
+y <- 5
+# apply operation
+x+y
+
+#install.packages("readxl")
+library(readxl)
+
+```
+## Introduction to R
+```{R}
+data("iris")
+ls
+
+?ls
+?lm
+print("Hello World")
+print("asim start R learning")
+iris
+names(iris)
+iris$Species
+view(iris)
+
+```
+
+## First lecture video
+
+```{R}
+2+3
+
+x #letter
+'x' #string #if x is inverted commas then its string
+#anyting in inverted commas will be known as string
+"R with Aammar"
+2 #integer #number
+4+5 #control+enter command will act as run 
+x <- 2+3+4
+x
+2+3+4
+y <- 3+4+9+5
+y1=3+5
+x+y
+x1 <- "R with Aammar"
+x1 <- as.numeric(x1)
+#character variabe and numeric/integer variable
+x1+y1
+
+#packages
+#install.packages("readxl")
+library(readxl)
+
+"R with Aammar"
+2 #integer #number
+4+5 #control+enter command will act as run 
+x <- 2+3+4
+x
+2+3+4
+y <- 3+4+9+5
+y1=3+5
+x+y
+x1 <- "R with Aammar"
+```
+## R default plot of Cars data set
+```{r}
+plot(cars)
+```
+## 2nd-video-Import data into R 
+```{R}
+library(readxl)
+my_data <- read_excel("data.xlsx", sheet="data",
+                      col_types=c("text", "numeric","numeric"))
+View(my_data)
+str(my_data)
+head(my_data) 
+#head command gives first upper 6 rows of the data
+tail(my_data)
+#tail last 6 rows
+
+plot(my_data)
+boxplot(my_data$Height, my_data$Weight)
+boxplot(my_data$Height ~ my_data$Crop)
+boxplot(my_data$crop, my_data$Height)
+
+# For different type of variable box plot
+boxplot(my_data$Height ~ my_data$Crop)
+
+
+```
+##video-3-Type of Plots in R | R-programming and statistics for Beginners
+
+```{R}
+library(readxl)
+my_data <- read_excel("data.xlsx", sheet="data",
+                      col_types=c("text", "numeric","numeric"))
+View(my_data)
+#strip chart
+stripchart(my_data$Height)
+stripchart(my_data$Height ~ my_data$Weight)
+
+#histogram
+hist(my_data$Height)
+hist(my_data$Weight)
+#scatter plot
+plot(my_data$Weight, my_data$Height)
+#qqnorm plot
+qqnorm(my_data$Height)
+#barplot
+barplot(my_data$Height)
+#mosaicplot
+mosaicplot(~ my_data$Crop+my_data$Height)
+
+```
+## 4th-video Box Plots basics
+```{R}
+library(readxl)
+data <- read_excel("data.xlsx", sheet="data",
+                      col_types=c("text", "numeric","numeric"))
+view(data)
+remove(data)
+boxplot(my_data$Height ~ my_data$Crop)
+#labeling
+boxplot(Height ~ Crop, data = my_data)
+boxplot(Height ~ Crop, data = my_data, main="Boxplot of Experiment",
+        xlab="Crop Type", ylab="Plant Height(cm)")
+#here main is the title name
+#coloring
+boxplot(Height ~ Crop, data = my_data, main="Boxplot of Experiment",
+        xlab="Crop Type", ylab="Plant Height(cm)",
+        col="Green", border="red")
+#color picker from Google and its color code
+#grouping of treatment
+library(readxl)
+my_data2 <- read_excel("data.xlsx", sheet="data2",
+                   col_types=c("text", "numeric","numeric","text"))
+view(data)
+my_data2$Crop <- factor(my_data2$Crop, levels=c("Wheat", "Maize", "Rice","Potato"))
+boxplot(my_data2$Height ~ my_data2$Crop * my_data2$Water,
+        main="Boxplot of Experiment")
+#box plot also known as whisker plot
+#microsoft toys can be used for color picking
+
+##ggplot2::}
+
+```
+## 5-video-ANOVA and Tukey Test in R-stats and Programing
+```{R}
+library(readxl)
+my_data2 <- read_excel("data.xlsx", sheet="data2",
+                   col_types=c("text", "numeric","numeric","text"))
+quantile(data$Height)
+
+sd(data$Height)
+var(data$Height)
+
+lapply(data[, 2:3], mean)
+lapply(data[, 2:3], sd)
+lapply(data[, 2:3], var)
+
+summary(data)
+#anova
+a1 <- aov(data$Height ~ data$Crop)
+summary(a1)
+TukeyHSD(a1)
+#group, anova
+a2 <- aov(data$Height ~ data$Crop)
+summary(a2)
+TukeyHSD(a2)
+
+
+```
+##6-video- ANOVA and multiple means comparison
+```{R}
+library(readxl)
+x <- read_excel("data.xlsx", sheet="data2",
+                   col_types=c("text", "numeric","numeric","text"))
+view(x)
+#boxplot
+boxplot(x$Height ~ x$Crop)
+boxplot(Height ~ Crop, data=x)
+#multiple comparison of means
+
+#1-Tukey.HSD test
+#install.packages("agricolae")
+library(agricolae)
+
+help("agricolae-package")
+?'agricolae-package'
+#1-Tukey.HSD test
+model <- aov(Height ~ Crop, data=x)
+out <- HSD.test(model, "Crop", group = TRUE, console = TRUE, main = "Tukey test" )
+#2-LSD test
+model <- aov(Height ~ Crop, data=x)
+out <- LSD.test(model, "Crop", group = TRUE, console = TRUE, main = "LSD test" )
+plot(out)
+#3-Duncan
+model <- aov(Height ~ Crop, data=x)
+out <- duncan.test(model, "Crop", group = TRUE, console = TRUE, main = "Duncan test")
+plot(out)
+#grouping
+boxplot(Height ~ Crop * Water, data =x, las=2, xlab="")
+model1 <- aov(Height ~ Crop * Water, data=x)
+out1 <- HSD.test(model1, c("Crop","Water"), group = TRUE, console = TRUE, main = "Tukey test" )
+plot(out1,  las=2)
+#the plot will be saved to required output format
+jpeg(file="Tukey test.tiff",
+     width=6, height = 4, units="in", res = 300)
+boxplot(Height ~ Crop * Water, data=x, las=2, xlab="")
+dev.off()
+
+jpeg(file="Tukey test plot.tiff",
+     width=6, height = 4, units="in", res = 300)
+plot(out1,  las=2)
+dev.off()
+
+#string=c("crop","water")
+
+
+
+
+```
+##7-video-ggplot2 package in R
+```{R}
+#1-heatmap
+x <- mtcars
+
+x<- as.matrix(mtcars)
+View(x)
+heatmap(x, scale = "column")
+
+#2-gplots
+#install.packages("gplots")
+library(gplots)
+heatmap.2(x, scale="column", col=bluered(100),
+          trace="none")
+?heatmap.2()
+
+
+#3-pheatmaps
+#install.packages("pheatmap")
+library(pheatmap)
+pheatmap(x, scale="column", cutree_rows=4,cutree_cols=2)
+
+#-ggplot2
+library(ggplot2)
+y <- iris
+
+#install.packages("reshape")
+
+library(reshape)
+
+y1 <- melt(iris)
+
+ggplot(y1, aes(y1$Species, y1$variable, fill= y1$value))+
+  geom_tile()+
+  scale_fill_gradient(low = "red", high = "green")
+  
+```
+  
+##video-7-practice using iris data
+
+#install.packages("ggplot2")
+library(ggplot2)
+#ggplot(function)
+#data(dat1)
+#mapping(xaxis, yaxis)
+#geometry(scatter, box, line)
+
+library(readxl)
+#gg1 <- read_excel("gg1.xlsx", sheet = "gg1")
+x <- read_excel("ggiris.xlsx", sheet = "ggiris", 
+                      col_types = c("numeric", "numeric", "numeric", "numeric", "numeric", "text"))
+
+ggplot(data=x, mapping=aes(x=Species, y=SepalWidthCm))+ geom_point()
+
+ggplot(x, aes(Species, SepalWidthCm))+
+  geom_point(size=3)+
+  geom_line()
+
+ggplot(x, aes(Species, SepalWidthCm))+
+  geom_boxplot(size=0.5)+geom_point(size=1.5,colour="red",alpha=0.5)+
+  ggsave("ggplot23.tiff", units="in", width=8, height=6, dpi=300, compression='lzw')
+ 
+ggplot(x, aes(Species, SepalWidthCm, colour="blue"))+
+  geom_boxplot()+
+   labs(x="Species Type", y="Width",title = "flower growth")+
+  theme_bw()+
+  ggsave("ggplot17.tiff", units="in", width=8, height=6, dpi=300, compression='lzw')
+
+
+
+#ggplot(x, aes(Crop, Height, color=water))+
+  geom_boxplot()+
+  facet_wrap(~fert.type)+
+  labs(x="Crop Type", y="Plant Height (cm)",title = "Plant Growth")+
+  theme_bw()+
+  coord_flip()+
+  ggsave("ggplot2.tiff", units="in", width=6, height=8, dpi=300, compression='lzw')
+
+}
+
+```
+## Video-8- built in datasets
+```{
+#how to use built in datasets or R
+data()
+#all datasets in R
+View(iris)
+#to view datasets in R console
+data("iris")
+View(iris)
+# here v must be capital letter
+View(npk) #NPK data for factorial design
+head(CO2)
+head(iris)#to show first 6 rows of the data
+names(CO2) #to show the names of columns
+nrow(CO2) #to look for the number of rows
+ncol(CO2) #to look for the number of columns
+data(trees)
+install.packages("writexl") #to save .xlsx files
+install.packages('openxlsx')
+library(openxlsx)
+library(writexl)
+write_xlsx(CO2, path="C:\\Users\\mnawaz\\Documents\\R\\CO2.xlsx")#command line to save .xlsx files
+write_xlsx(CO2, path="C:\\Users\\mnawaz\\Documents\\R\\trees.xlsx")
+library(ggplot2) #to plot graphs and figures
+ggplot(trees, aes(Girth, Height))+geom_point()+geom_smooth(method="lm")#scatter plot
+}
+
+```
+##video-9-Hash-tags (# tags) in R
+```{
+#how to use built in datasets or R
+data()#all datasets in R
+View(iris)#to view datasets in R console
+data("iris")
+View(iris)
+View(npk) #NPK data for factorial design
+head(CO2)
+head(iris)#to show first 6 rows of the data
+names(CO2) #to show the names of columns
+nrow(CO2) #to look for the number of rows
+ncol(CO2) #to look for the number of columns
+data(trees)
+install.packages("writexl") #to save .xlsx files
+install.packages('openxlsx')
+library(openxlsx)
+library(writexl)
+write_xlsx(CO2, path="C:\\Users\\mnawaz\\Documents\\R\\CO2.xlsx")#command line to save .xlsx files
+write_xlsx(CO2, path="C:\\Users\\mnawaz\\Documents\\R\\trees.xlsx")
+library(ggplot2) #to plot graphs and figures
+ggplot(trees, aes(Girth, Height))+geom_point()+geom_smooth(method="lm")#scatter plot
+
+install.packages("tidyverse")
+library(tidyverse)
+
+install.packages("lasio")
+install.packages("welly")
+install.packages("swirl")
+library("swirl")
+swirl()
+View(welly)
+
+}
+
+```
+## video-10-Vector and arrays
+```{
+# create a vector in R
+v1 <- c(3,4,6,8,9,13)
+v2 <- c(12,13,13,2,12,9)
+
+print(v1)
+print(v2)
+v3 <-c(v1,v2)
+v1+v2
+v1*v3
+v1+v3
+
+#vectors for strings
+s1 <- c("I", "Love", "R", "with", "Aammar")
+print(s1)
+c(v1,s1)
+}
+
+```
+##video-11-Sequence and Repeats in R
+```{
+#sequence and repeats
+seq(from=0, to =100)
+seq(from=1, to =121)
+seq(1,121)
+seq(1, 100, by=5)
+seq(0,100, by=10)
+seq1 <- seq(3, 33, by=1.3)
+seq1
+
+#rep("hello", times=3)
+rep(123, times=100)
+rep("HomeWork", 100)
+rep(1:10, each=3)
+rep(1:10, each=3, times=2)
+rep("I love R with Aammar", 100)
+
+}
+
+```
+##12-video-scatter-plot
+```{
+#scatter plots in R
+
+library(ggplot2)
+data("cars")
+View(cars)
+ggplot(data=cars, aes(x=speed, y=dist))+geom_point()+
+  geom_smooth(method="lm", se=T, level=0.95)
+
+#scatter plot with multi line
+data("Orange")
+ggplot(Orange, aes(age, circumference,color=Tree))+
+  geom_point(size=4,shape=19)
+
+#scatter by shape
+
+ggplot(Orange, aes(age, circumference,color=Tree))+
+  geom_point(size=4,aes(shape=Tree))+
+  geom_line(linetype=5,size=1)+
+  labs(x="Age", y="Circumference", title="Graph")+
+  ggsave("scatterplot1.pdf")
+
+#bubble plot
+install.packages("viridis")
+library(viridis)
+?viridis
+#help file will be opened in 4th quadrant
+data("quakes")
+#earthquake related data geosciences
+nrow(quakes)
+q_sample <- quakes[seq(from=1, to=1000, by=1),]
+nrow(q_sample)
+
+ggplot(data = q_sample, aes(x=lat,y=long))+
+  geom_point(aes(size=mag, color=mag))+
+  guides(size=F)+
+  scale_colour_viridis_b(option="B")+
+  scale_size_continuous(range=c(1,5))+
+  labs(x="Latitude", y="Longitude", title="Graph")+
+  ggsave("Bubbleplot_Quake3.pdf")
+
+#jitter plot
+data("diamonds")
+View(diamonds)
+nrow(diamonds)
+d_sample <- diamonds[seq(from=1, to=53940, by=1),]
+nrow(d_sample)
+ggplot(d_sample, aes(cut,price,color=cut))+geom_point()
+ggplot(d_sample, aes(cut,price,color=cut))+geom_jitter()
+}
+
+```
+##video-13-violinplot
+```{
+#violin plot in ggplot
+#geom_violin()
+
+installed.packages("ggplot2")
+library(ggplot2)
+
+data()
+data("diamonds")
+
+d_sample <- diamonds[seq(1, 53000, by=100),]
+nrow(d_sample)
+
+p <- ggplot(data=d_sample, aes(x=cut, y=price,z=depth, color=cut))+
+  geom_violin()
+
+p <- ggplot(data=d_sample, aes(x=cut, y=price,z=depth, fill=cut))+
+  geom_violin()
+p + geom_boxplot(width=0.1)+geom_jitter(size=0.5)+
+  ggsave("violinplot.pdf")
+#the plot will saved to pdf format in respective home/current working directory
+}
+
+```
+##video-14-PCA-Principal Component Analysis
+```{
+# read data
+data("iris")
+
+#PCA
+x14 <- prcomp(iris[,-5],center=TRUE,scale=TRUE) #5th column not required that'y -5
+print(x14)
+summary(x14)
+
+library(ggplot2)
+#ggplot2 grouping
+iris <- cbind(iris, x14$x)
+
+ggplot(iris, aes(PC1, PC2, col=iris$Species, fill=iris$Species))+
+  stat_ellipse(geom="polygon", col="black", alpha=0.5)+
+  geom_point(shape=21, col="black")
+
+#pca plot
+install.packages("factoextra")
+install.packages("FactoMineR")
+#here R of 'FactorMineR' should be capital
+library("factoextra")
+library("FactoMineR")
+
+#PCA table
+iris.pca <- PCA(iris[,-5], graph=TRUE, scale.unit=FALSE)
+
+#screeplot
+fviz_eig(iris.pca, addlabel=TRUE,ylim=c(0,70))
+
+#PCA Plot
+
+fviz_pca_var(iris.pca, col.var="cos2",
+             gradient.com=c("#FFCC00", "#cc9933", "#660033", "#330033"),
+             repel=TRUE)+
+  labs(title="PCA of parameters", x="PC1 (49%)",y="PC2(23.9%)",
+       colour="cos2")+
+  ggsave("PCA.png", units="in", width=6.5,height=5.5)
+       
+rlang::last_error()
+}
+
+```
+##Video-15-Heatmaps in R
+```{
+#1-heatmap
+x <- mtcars
+heatmap(mtcars)
+
+x<- as.matrix(mtcars)
+View(x)
+heatmap(x, scale = "column")
+
+#2-gplots
+install.packages("gplots")
+library(gplots)
+heatmap.2(x, scale="column", col=bluered(100),
+          trace="none")
+?heatmap.2()
+
+
+#3-pheatmaps
+install.packages("pheatmap")
+library(pheatmap)
+pheatmap(x, scale="column", cutree_rows=4,cutree_cols=2)
+
+#-ggplot2
+library(ggplot2)
+y <- iris
+
+install.packages("reshape")
+
+library(reshape)
+
+y1 <- melt(iris)
+
+ggplot(y1, aes(y1$species, y1$variable, fill=y1$value))+
+  geom_tile()+
+  scale_fill_gradient(low="yellow", high="red")
+}
+
+```
+##16-video-p-values
+```{
+#install packages
+install.packages("ggplot2")
+install.packages("ggpval")
+#load packages
+library(ggplot2)
+library(ggpval)
+
+#draw a plot
+data("ToothGrowth")
+
+p <- ggplot(ToothGrowth)+
+  aes(x=supp, y=len, fill=supp)+
+  geom_boxplot(shape="circle", width=0.5)+
+  stat_boxplot(geom='errorbar', width=0.1)+
+  scale_fill_viridis_d(option="inferno", direction=1)+
+  labs(x="Supplement", y="Length", fill="Supplement")+
+  ggthemes::theme_par()+
+  face_wrap(vars(dose));p
+#Add p_value
+add_pval(p, pairs = list(c(1,2)),
+         test= "t.test")
+help("add_pval")
+}
+
+```
+##17-important Resources to Learn R
+```{
+#there different books available freely on Rstudio website
+#there is a lot of stuff available
+#YaRrr
+#advance R
+#R in data science
+#https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf
+#https://www.youtube.com/watch?app=desktop&v=vPa7y8ypKwA
+#https://www.rstudio.com/resources/books/
+}
+
+```
+##18-video-Barplot
+```{
+#title:"7 steps guide to make publication ready Barplot from scratch (one way ANOVA)"
+#author: "RwithAammar"
+#date: "03/03/2022"
+#########################
+install.packages("multcompView")
+install.packages("dplyr")
+##Install these packages if you have not and load them:
+library(ggplot2)
+library(ggthemes)
+library(multcompView)
+library(dplyr)
+############################
+## 1- load or import your data
+data("chickwts")
+tibble(chickwts)
+##############################
+## 2- calculate "means" of you treatment groups and the "standard deviation" SD to show on error bars as follows
+mean_data <- group_by(chickwts, feed) %>% #feed is our treatment in this example
+  summarise(weight_mean=mean(weight), sd=sd(weight)) %>% #to calculate mean and SD
+  arrange(desc(weight_mean)) #to arrange in descending order
+tibble(mean_data)
+View(mean_data)
+##################################
+## 3- This step involves performing analysis of variance "ANOVA", using buitin **aov()** function
+library(stats)
+anova <- aov(weight ~ feed, data =chickwts)
+summary(anova)
+View(anova)
+##################################
+## 4- If the ANOVA is significantly different then, we will draw a multiple mean comparison
+library(stats)
+tukey <- TukeyHSD(anova)
+tukey
+##################################
+## 5- Draw multiple comparison letters using *multcomp* R package as follows:
+library(multcompView)
+group_letters <- multcompLetters4(anova, tukey)
+group_letters
+#extracting group letters
+group_letters <- as.data.frame.list(group_letters$feed)
+#adding to the mean_data
+mean_data$group_letters <- group_letters$Letters
+tibble(mean_data)
+View(mean_data)
+##################################
+## 6- Drawing the *publication ready Barlot* in ggplot2
+library(ggplot2)
+p <- ggplot(mean_data, aes(x=feed, y= weight_mean))+
+  geom_bar(stat="identity", aes(fill=feed), show.legend=FALSE, width=0.6)+ #barplot
+  geom_errorbar(#this argument is utting sd as error bars
+    aes(ymin=weight_mean-sd, ymax=weight_mean+sd),
+    width=0.1
+       )+
+  geom_text(aes(label=group_letters, y=weight_mean + sd), vjust=0.4)+ # add letters
+  scale_fill_brewer(palette="BrBG", direction=1) + #theme setting
+  labs(    #this will add labels
+    x = "Feed Type",
+    y = "Chicken Weight (g)",
+    title = "Publication Ready Barplot",
+    subtitle = "Made by #RwithAammar",
+    fill = "Feed Type"
+  )+
+  ylim(0,410)+ #change your yaxis limits based on the letters
+  ggthemes::theme_par();p
+##################################
+##7- Saving upto 4k barplots in R
+tiff('Barplot.tiff', units = "in", width = 10, height = 6, res = 300, compression = "lzw")
+p
+dev.off()
+
+}
+
+```
+##19-choosing the right statiscal method
+```{
+#statistical methods details are given
+}
+
+```
+##20-video-Correlation in R
+```{
+#Install packages
+install.packages("psych")
+install.packages("corrplot")
+install.packages("RColorBrewer")
+library(psych)
+library(corrplot)
+library(RColorBrewer)
+
+#psych package
+
+data("iris")
+View(iris)
+x43 <- corr.test(iris[-5])
+x43
+pairs.panels(iris[-5])
+
+#import your dataset
+
+library(readxl)
+x2 <- read_excel("iris.xlsx", sheet = "ggiris")
+View(x2)
+
+m <- cor(x2[ ,1:5])
+corrplot(m)
+?corrplot
+corrplot(m, type="upper", order="hclust", method="pie",
+         col=brewer.pal(n=5,name = "RdYlBu"))
+w <- cor(x2[ ,1:5], method="spearman")
+corrplot(w)
+?corrplot
+corrplot(w, type="upper", order="hclust", method="pie",
+         col=brewer.pal(n=5,name = "RdYlBu"))
+
+#mixed corrplot
+corrplot.mixed(w, lower.col = "black", number.cex=0.8)
+corrplot.mixed(w, lower="square", upper="pie", tl.col="Red")
+}
+
+```
+##21-video-CRD-vs-RCBD-LSD
+```{
+#timestamp-1:19 unit (t) missing, one(e) missing,
+#3 types of research designs
+}
+
+```
+
+```{R}
+
+
+  
+```
+
+
